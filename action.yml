@@ -1,0 +1,28 @@
+# action.yml
+name: 'TGS DMAPI Updater'
+description: 'Updates TGS DMAPI in repositories'
+inputs:
+  header-path:
+    description: 'Path to tgs.dm header file in the repository'
+    required: true
+  library-path:
+    description: 'Path to the tgs directory in the repository'
+    required: true
+  target-branch:
+    description: 'The branch to update'
+    required: false
+    default: 'master'
+  github-token:
+    description: 'GitHub token for cloning and pushing'
+    required: false
+    default: ${{ secrets.GITHUB_TOKEN }}
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.header-path }}
+    - ${{ inputs.library-path }}
+    - ${{ inputs.target-branch }}
+    - ${{ github.repository.owner }}
+    - ${{ github.repository.name }}
+    - ${{ inputs.github-token }}

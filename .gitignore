@@ -1,0 +1,8 @@
+.vs
+*.user
+*.suo
+*.userprefs
+*DS_Store
+*.sln.ide
+[Oo]bj/
+[Bb]in/
