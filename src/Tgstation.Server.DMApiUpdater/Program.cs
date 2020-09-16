@@ -66,7 +66,15 @@ namespace Tgstation.Server.DMApiUpdater
 			{
 				BranchName = targetBranch,
 				Checkout = true,
-				RecurseSubmodules = false
+				RecurseSubmodules = false,
+				CredentialsProvider = (url, usernameFromUrl, supportedCredentialTypes) =>
+				{
+					return new UsernamePasswordCredentials
+					{
+						Username = gitHubToken,
+						Password = String.Empty
+					};
+				}
 			});
 
 			Console.WriteLine("Loading repository...");
@@ -128,7 +136,17 @@ namespace Tgstation.Server.DMApiUpdater
 
 			Console.WriteLine($"Force pushing to origin/{BranchName}...");
 			var remote = repo.Network.Remotes.First();
-			repo.Network.Push(remote, $"+refs/heads/{BranchName}");
+			repo.Network.Push(remote, $"+refs/heads/{BranchName}", new PushOptions
+			{
+				CredentialsProvider = (url, usernameFromUrl, supportedCredentialTypes) =>
+				{
+					return new UsernamePasswordCredentials
+					{
+						Username = gitHubToken,
+						Password = String.Empty
+					};
+				}
+			});
 
 			try
 			{
