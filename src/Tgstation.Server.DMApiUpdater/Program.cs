@@ -58,7 +58,7 @@ namespace Tgstation.Server.DMApiUpdater
 
 			var releaseTask = GetLatestDMApiBytes(gitHubClient, repoOwner, repoName);
 
-			var repoUrl = $"https://{gitHubToken}@github.com/{repoOwner}/{repoName}.git";
+			var repoUrl = $"https://{gitHubToken}:x-oauth-basic@github.com/{repoOwner}/{repoName}.git";
 			Console.WriteLine($"Cloning {repoUrl}...");
 
 			const string BaseRepoPath = "./cloned_repo";
