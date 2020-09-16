@@ -58,7 +58,7 @@ namespace Tgstation.Server.DMApiUpdater
 
 			var releaseTask = GetLatestDMApiBytes(gitHubClient, repoOwner, repoName);
 
-			var repoUrl = $"https://github.com/{repoOwner}/{repoName}";
+			var repoUrl = $"https://{githubToken}@github.com/{repoOwner}/{repoName}.git";
 			Console.WriteLine($"Cloning {repoUrl}...");
 
 			const string BaseRepoPath = "./cloned_repo";
@@ -66,15 +66,7 @@ namespace Tgstation.Server.DMApiUpdater
 			{
 				BranchName = targetBranch,
 				Checkout = true,
-				RecurseSubmodules = false,
-				CredentialsProvider = (url, usernameFromUrl, supportedCredentialTypes) =>
-				{
-					return new UsernamePasswordCredentials
-					{
-						Username = gitHubToken,
-						Password = String.Empty
-					};
-				}
+				RecurseSubmodules = false
 			});
 
 			Console.WriteLine("Loading repository...");
@@ -136,17 +128,7 @@ namespace Tgstation.Server.DMApiUpdater
 
 			Console.WriteLine($"Force pushing to origin/{BranchName}...");
 			var remote = repo.Network.Remotes.First();
-			repo.Network.Push(remote, $"+refs/heads/{BranchName}", new PushOptions
-			{
-				CredentialsProvider = (url, usernameFromUrl, supportedCredentialTypes) =>
-				{
-					return new UsernamePasswordCredentials
-					{
-						Username = gitHubToken,
-						Password = String.Empty
-					};
-				}
-			});
+			repo.Network.Push(remote, $"+refs/heads/{BranchName}");
 
 			try
 			{
