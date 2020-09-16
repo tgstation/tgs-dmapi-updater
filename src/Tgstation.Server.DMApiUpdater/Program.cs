@@ -45,9 +45,11 @@ namespace Tgstation.Server.DMApiUpdater
 			var headerPath = args[0];
 			var libraryPath = args[1];
 			var targetBranch = args[2];
-			var repoOwner = args[3];
-			var repoName = args[4];
-			var gitHubToken = args[5];
+			var gitHubToken = args[3];
+			var repoSlug = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
+			var repoSplits = repoSlug.Split('/');
+			var repoOwner = repoSlug[0];
+			var repoName = repoSlug[1];
 
 			var gitHubClient = new GitHubClient(new ProductHeaderValue("Tgstation.Server.DMApiUpdater", "1.0.0"))
 			{

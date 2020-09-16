@@ -24,8 +24,6 @@ runs:
   - ${{ inputs.header-path }}
   - ${{ inputs.library-path }}
   - ${{ inputs.target-branch }}
-  - ${{ github.repository_owner }}
-  - ${{ github.repository.name }}
   - ${{ inputs.github-token }}
 branding:
   icon: 'arrow-up-circle'
