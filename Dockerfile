@@ -4,8 +4,6 @@ WORKDIR /src
 
 COPY src/Tgstation.Server.DMApiUpdater .
 
-RUN dotnet publish -o /app
+RUN dotnet build
 
-WORKDIR /app
-
-ENTRYPOINT ["dotnet", "run", "/app/Tgstation.Server.DMApiUpdater.dll", "--"]
+ENTRYPOINT ["dotnet", "run", "--no-build", "--project", "/src/Tgstation.Server.DMApiUpdater.csproj", "--"]
