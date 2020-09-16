@@ -56,27 +56,17 @@ namespace Tgstation.Server.DMApiUpdater
 				Credentials = new Octokit.Credentials(gitHubToken)
 			};
 
-			var currentUserTask = gitHubClient.User.Current();
 			var releaseTask = GetLatestDMApiBytes(gitHubClient, repoOwner, repoName);
 
 			var repoUrl = $"https://github.com/{repoOwner}/{repoName}";
 			Console.WriteLine($"Cloning {repoUrl}...");
 
 			const string BaseRepoPath = "./cloned_repo";
-			var currentUser = await currentUserTask;
 			LibGit2Sharp.Repository.Clone(repoUrl, BaseRepoPath, new CloneOptions
 			{
 				BranchName = targetBranch,
 				Checkout = true,
-				RecurseSubmodules = false,
-				CredentialsProvider = (url, usernameFromUrl, supportedCredentialTypes) =>
-				{
-					return new UsernamePasswordCredentials
-					{
-						Username = currentUser.Login,
-						Password = gitHubToken
-					};
-				}
+				RecurseSubmodules = false
 			});
 
 			Console.WriteLine("Loading repository...");
@@ -138,17 +128,7 @@ namespace Tgstation.Server.DMApiUpdater
 
 			Console.WriteLine($"Force pushing to origin/{BranchName}...");
 			var remote = repo.Network.Remotes.First();
-			repo.Network.Push(remote, $"+refs/heads/{BranchName}", new PushOptions
-			{
-				CredentialsProvider = (url, usernameFromUrl, supportedCredentialTypes) =>
-				{
-					return new UsernamePasswordCredentials
-					{
-						Username = currentUser.Login,
-						Password = gitHubToken
-					};
-				}
-			});
+			repo.Network.Push(remote, $"+refs/heads/{BranchName}");
 
 			try
 			{
