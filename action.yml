@@ -1,5 +1,6 @@
 # action.yml
 name: 'TGS DMAPI Updater'
+author: 'Cyberboss'
 description: 'Updates TGS DMAPI in repositories'
 inputs:
   header-path:
@@ -15,14 +16,17 @@ inputs:
   github-token:
     description: 'GitHub token for cloning and pushing'
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.header-path }}
-    - ${{ inputs.library-path }}
-    - ${{ inputs.target-branch }}
-    - ${{ github.repository.owner }}
-    - ${{ github.repository.name }}
-    - ${{ inputs.github-token }}
+  - ${{ inputs.header-path }}
+  - ${{ inputs.library-path }}
+  - ${{ inputs.target-branch }}
+  - ${{ github.repository_owner }}
+  - ${{ github.repository.name }}
+  - ${{ inputs.github-token }}
+branding:
+  icon: 'arrow-up-circle'
+  color: 'green'
