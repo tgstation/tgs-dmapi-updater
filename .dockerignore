@@ -1,2 +1,10 @@
 */bin
 */obj
+.dockerignore
+.editorconfig
+.gitignore
+action.yml
+Dockerfile
+LICENSE
+README.md
+tgs-dmapi-updater.sln

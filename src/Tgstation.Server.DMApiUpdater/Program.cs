@@ -48,8 +48,8 @@ namespace Tgstation.Server.DMApiUpdater
 			var gitHubToken = args[3];
 			var repoSlug = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
 			var repoSplits = repoSlug.Split('/');
-			var repoOwner = repoSlug[0];
-			var repoName = repoSlug[1];
+			var repoOwner = repoSplits[0];
+			var repoName = repoSplits[1];
 
 			var gitHubClient = new GitHubClient(new ProductHeaderValue("Tgstation.Server.DMApiUpdater", "1.0.0"))
 			{
@@ -94,7 +94,7 @@ namespace Tgstation.Server.DMApiUpdater
 
 			var targetLibraryPath = Path.Combine(BaseRepoPath, libraryPath);
 			if (Directory.Exists(targetLibraryPath))
-				RecursiveDelete(targetLibraryPath).ToList();
+				RecursiveDelete(targetLibraryPath);
 
 			var releaseTuple = await releaseTask;
 			var zipBytes = releaseTuple.Item1;

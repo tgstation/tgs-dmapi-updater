@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 
 WORKDIR /src
 
-COPY src .
+COPY src/Tgstation.Server.DMApiUpdater .
 
 RUN dotnet build
 
