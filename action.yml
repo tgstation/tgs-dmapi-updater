@@ -24,6 +24,7 @@ runs:
   - ${{ inputs.header-path }}
   - ${{ inputs.library-path }}
   - ${{ inputs.github-token }}
+  - ${{ inputs.repo-path }}
 branding:
   icon: 'arrow-up-circle'
   color: 'green'
