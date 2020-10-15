@@ -9,21 +9,20 @@ inputs:
   library-path:
     description: 'Path to the tgs directory in the repository'
     required: true
-  target-branch:
-    description: 'The branch to update'
-    required: false
-    default: 'master'
   github-token:
     description: 'GitHub token for cloning and pushing'
     required: false
     default: ${{ github.token }}
+  repo-path:
+    description: 'Path to the cloned repository on the branch to update'
+    required: false
+    default: '/github/workspace'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
   - ${{ inputs.header-path }}
   - ${{ inputs.library-path }}
-  - ${{ inputs.target-branch }}
   - ${{ inputs.github-token }}
 branding:
   icon: 'arrow-up-circle'
