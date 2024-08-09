@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-bionic
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim
 
 WORKDIR /src
 
 COPY src/Tgstation.Server.DMApiUpdater .
 
-RUN dotnet build
+RUN dotnet build -c Release
 
-ENTRYPOINT ["dotnet", "run", "--no-build", "--project", "/src/Tgstation.Server.DMApiUpdater.csproj", "--"]
+ENTRYPOINT ["dotnet", "run", "-c", "Release", "--no-build", "--project", "/src/Tgstation.Server.DMApiUpdater.csproj", "--"]

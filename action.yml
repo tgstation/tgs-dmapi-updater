@@ -17,6 +17,9 @@ inputs:
     description: 'Path to the cloned repository on the branch to update'
     required: false
     default: '/github/workspace'
+outputs:
+  release-notes:
+    description: 'The DMAPI release notes'
 runs:
   using: 'docker'
   image: 'Dockerfile'

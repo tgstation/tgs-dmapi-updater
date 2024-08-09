@@ -1,17 +1,17 @@
-﻿using Octokit;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+
+using Octokit;
 
 namespace Tgstation.Server.DMApiUpdater
 {
 	static class Program
 	{
-		static async Task<Tuple<byte[], string>> GetLatestDMApiBytes(IGitHubClient gitHubClient, string repoOwner, string repoName)
+		static async Task<Tuple<byte[], string, string>> GetLatestDMApiBytes(IGitHubClient gitHubClient)
 		{
 			Console.WriteLine("Getting TGS releases...");
 			var releases = await gitHubClient.Repository.Release.GetAll("tgstation", "tgstation-server");
@@ -22,10 +22,11 @@ namespace Tgstation.Server.DMApiUpdater
 			var dmapiAsset = latestDMApiRelease.Assets.First(x => x.Name.Equals("DMAPI.zip", StringComparison.Ordinal));
 			Console.WriteLine("Downloading zip...");
 
-			using var webClient = new WebClient();
+			using var httpClient = new HttpClient();
 			return Tuple.Create(
-				await webClient.DownloadDataTaskAsync(new Uri(dmapiAsset.BrowserDownloadUrl)),
-				latestDMApiRelease.TagName);
+				await httpClient.GetByteArrayAsync(new Uri(dmapiAsset.BrowserDownloadUrl)),
+				latestDMApiRelease.TagName,
+				latestDMApiRelease.Body);
 		}
 
 		static void RecursiveDelete(string directory)
@@ -45,18 +46,12 @@ namespace Tgstation.Server.DMApiUpdater
 			var libraryPath = args[1];
 			var gitHubToken = args[2];
 			var repoPath = args[3];
-
-			var repoSlug = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY");
-			var repoSplits = repoSlug.Split('/');
-			var repoOwner = repoSplits[0];
-			var repoName = repoSplits[1];
-
 			var gitHubClient = new GitHubClient(new ProductHeaderValue("Tgstation.Server.DMApiUpdater", "1.0.0"))
 			{
-				Credentials = new Octokit.Credentials(gitHubToken)
+				Credentials = new Credentials(gitHubToken)
 			};
 
-			var releaseTask = GetLatestDMApiBytes(gitHubClient, repoOwner, repoName);
+			var releaseTask = GetLatestDMApiBytes(gitHubClient);
 
 			Console.WriteLine("Deleting old DMAPI...");
 
@@ -89,6 +84,12 @@ namespace Tgstation.Server.DMApiUpdater
 				Directory.CreateDirectory(dir);
 				entry.ExtractToFile(targetPath);
 			}
+
+			var substitutedString = releaseTuple.Item3
+				.Replace("%", "%25")
+				.Replace("\r", "%0D")
+				.Replace("\n", "%0A");
+			Console.WriteLine($"::set-output name=release-notes::{substitutedString}");
 		}
 	}
 }

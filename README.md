@@ -33,3 +33,9 @@ The branch to update. Defaults to `master`.
 ### `github-token`
 
 The GitHub token to use to push the changes and create the pull request. Defaults to the GITHUB_TOKEN secret.
+
+## Outputs
+
+### `release-notes`
+
+The raw markdown of the DMAPI release notes.
