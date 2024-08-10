@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Octokit;
@@ -89,6 +91,13 @@ namespace Tgstation.Server.DMApiUpdater
 				.Replace("%", "%25")
 				.Replace("\r", "%0D")
 				.Replace("\n", "%0A");
+
+			IEnumerable<Match> matches = Regex.Matches(substitutedString, @"\((#([1-9][0-9]*)) @.*\)");
+			foreach (Match match in matches)
+			{
+				substitutedString = substitutedString.Replace(match.Groups[1].Value, $"https://github.com/tgstation/tgstation-server/pull/{match.Groups[2].Value}");
+			}
+
 			Console.WriteLine($"::set-output name=release-notes::{substitutedString}");
 		}
 	}
