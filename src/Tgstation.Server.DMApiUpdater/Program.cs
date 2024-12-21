@@ -90,7 +90,8 @@ namespace Tgstation.Server.DMApiUpdater
 			var substitutedString = releaseTuple.Item3
 				.Replace("%", "%25")
 				.Replace("\r", "%0D")
-				.Replace("\n", "%0A");
+				.Replace("\n", "%0A")
+				.Replace("@", String.Empty);
 
 			IEnumerable<Match> matches = Regex.Matches(substitutedString, @"\((#([1-9][0-9]*)) @.*\)");
 			foreach (Match match in matches)
